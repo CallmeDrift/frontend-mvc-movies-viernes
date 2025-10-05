@@ -13,7 +13,21 @@ export default class MovieView extends Observer {
     };
     initComponent = () => { };
     render = () => {
-        this.movieTemplate.setMovies(this.subject.getMovies());
+        const model = this.subject;
+        this.movieTemplate.setMovies(model.getMovies());
+        this.parent.innerHTML = '';
         this.parent.innerHTML += this.movieTemplate.getMoviesHTML();
+        const pagination = document.createElement('div');
+        pagination.classList.add('pagination');
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = '←';
+        prevBtn.addEventListener('click', () => model.prevPage());
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = `${model.getCurrentPage()} / ${model.getTotalPages()}`;
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = '→';
+        nextBtn.addEventListener('click', () => model.nextPage());
+        pagination.append(prevBtn, pageInfo, nextBtn);
+        this.parent.appendChild(pagination);
     };
 }

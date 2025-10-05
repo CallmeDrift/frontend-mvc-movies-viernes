@@ -1,0 +1,46 @@
+/* ==== HOME PAGE STYLE ==== */
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  color: #000000;
+  min-height: 100vh;
+  
+}
+
+.home-container img {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  margin-bottom: 30px;
+  object-fit: cover;
+}
+
+.home-container h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+  color: #ffcc00;
+  text-transform: uppercase;
+}
+
+.home-container p {
+  max-width: 800px;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  padding: 20px 25px;
+  border-radius: 10px;
+  margin: 15px 0;
+  background: linear-gradient(to bottom right, #e9a4d9, #558f9e);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.home-container p {
+  border-left: 4px solid #ff4444;
+}
+

@@ -16,7 +16,7 @@ export default class MovieTemplate {
   readonly getMovieHTML = (movie: Movie): string => `
   <div class="movie">
     <div class="movie-poster">
-      <img src="./asset/img/${movie.thumbnail}" alt="">
+      <img src="./asset/img/${movie.thumbnail}" alt="${movie.title}" onerror="this.onerror=null;this.src='./asset/img/not-icon.png';"/>
       <div>
         <p>
           <span>

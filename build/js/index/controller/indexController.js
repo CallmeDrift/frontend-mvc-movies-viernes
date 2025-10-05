@@ -1,12 +1,14 @@
 import MenuFactory from '../../menu/factory/MenuFactory.js';
 import MovieFactory from '../../movie/factory/MovieFactory.js';
 import AboutFactory from '../../about/factory/AboutFactory.js';
+import HomeFactory from '../../home/factory/HomeFactory.js';
 export default class IndexController {
     model;
     view;
     movie;
     menu;
     about;
+    home;
     constructor(model, view) {
         this.model = model;
         this.view = view;
@@ -17,6 +19,7 @@ export default class IndexController {
         this.movie = MovieFactory.create(mainContainer);
         this.menu = MenuFactory.create(menuContainer);
         this.about = AboutFactory.create(mainContainer);
+        this.home = HomeFactory.create(mainContainer);
     }
     initComponent = () => {
         // Inicializar base
@@ -40,6 +43,13 @@ export default class IndexController {
                     const main = this.view.getMainHTML();
                     main.innerHTML = '';
                     this.about.initComponent();
+                };
+            }
+            if (item.label === 'Home') {
+                item.action = () => {
+                    const main = this.view.getMainHTML();
+                    main.innerHTML = '';
+                    this.home.initComponent();
                 };
             }
         });
