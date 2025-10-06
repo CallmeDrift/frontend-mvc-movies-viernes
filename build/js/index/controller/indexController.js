@@ -2,6 +2,7 @@ import MenuFactory from '../../menu/factory/MenuFactory.js';
 import MovieFactory from '../../movie/factory/MovieFactory.js';
 import AboutFactory from '../../about/factory/AboutFactory.js';
 import HomeFactory from '../../home/factory/HomeFactory.js';
+import SearchFactory from '../../search/factory/SearchFactory.js';
 export default class IndexController {
     model;
     view;
@@ -9,26 +10,35 @@ export default class IndexController {
     menu;
     about;
     home;
+    search;
     constructor(model, view) {
         this.model = model;
         this.view = view;
-        // Contenedores principales según tu vista
         const mainContainer = this.view.getMainHTML();
         const menuContainer = this.view.getMenuHTML();
-        // Instancias usando las fábricas existentes
+        // Crear controladores principales
         this.movie = MovieFactory.create(mainContainer);
         this.menu = MenuFactory.create(menuContainer);
         this.about = AboutFactory.create(mainContainer);
         this.home = HomeFactory.create(mainContainer);
     }
     initComponent = () => {
-        // Inicializar base
         this.model.initComponent();
         this.view.initComponent();
-        // Renderizar menú y películas por defecto
         this.menu.initComponent();
         this.movie.initComponent();
-        // Asignar las acciones del menú (reemplaza los console.log)
+        const menuEl = this.view.getMenuHTML();
+        const searchContainer = document.createElement('div');
+        searchContainer.classList.add('search-container');
+        if (menuEl.parentElement) {
+            menuEl.parentElement.insertBefore(searchContainer, menuEl.nextSibling);
+        }
+        else {
+            document.body.insertBefore(searchContainer, this.view.getMainHTML());
+        }
+        const movieModel = this.movie.model;
+        this.search = SearchFactory.create(searchContainer, movieModel);
+        this.search.initComponent();
         const menuItems = this.menu['model'].getMenu();
         menuItems.forEach((item) => {
             if (item.label === 'Home' || item.label === 'Rentals') {
@@ -53,7 +63,7 @@ export default class IndexController {
                 };
             }
         });
-        // Re-renderizar el menú con las nuevas acciones activas
+        // Render final del menú
         this.menu['view'].render();
     };
 }

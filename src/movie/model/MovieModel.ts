@@ -6,24 +6,30 @@ export default class MovieModel extends Subject<MovieView> {
   private movies: Movie[]
   private currentPage: number
   private readonly pageSize: number
+  private filteredMovies: Movie[]
 
   constructor() {
     super()
     this.movies = []
     this.currentPage = 1
-    this.pageSize = 10 
+    this.filteredMovies = []
+    this.pageSize = 10
   }
 
   readonly getMovies = (): Movie[] => {
+    const list = this.filteredMovies.length ? this.filteredMovies : this.movies
     const start = (this.currentPage - 1) * this.pageSize
     const end = start + this.pageSize
-    return this.movies.slice(start, end)
+    return list.slice(start, end)
   }
 
   readonly getCurrentPage = (): number => this.currentPage
 
-  readonly getTotalPages = (): number =>
-    Math.ceil(this.movies.length / this.pageSize)
+  readonly getTotalPages = (): number => {
+    const list = this.filteredMovies.length ? this.filteredMovies : this.movies
+    return Math.ceil(list.length / this.pageSize)
+  }
+
 
   readonly nextPage = (): void => {
     if (this.currentPage < this.getTotalPages()) {
@@ -50,6 +56,25 @@ export default class MovieModel extends Subject<MovieView> {
 
   readonly initComponent = async (): Promise<void> => {
     this.movies = await this.fetchMovies()
+    this.filteredMovies = []
     this.notifyAllObservers()
   }
+
+  readonly filterMovies = (query: string): void => {
+  if (!query.trim()) {
+    this.filteredMovies = []
+  } else {
+    const q = query.toLowerCase()
+    this.filteredMovies = this.movies.filter((movie) =>
+      movie.title.toLowerCase().includes(q) ||
+      movie.year.toString().includes(q) ||
+      movie.genres.some((g) => g.toLowerCase().includes(q)) ||
+      movie.extract.toLowerCase().includes(q)
+    )
+  }
+  this.currentPage = 1
+  this.notifyAllObservers()
+}
+
+
 }
