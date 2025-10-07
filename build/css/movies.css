@@ -93,6 +93,19 @@
   color: var(--main-color);
 }
 
+.stars {
+  display: flex;
+  gap: 2px;
+  color: gold;
+}
+
+.bi-star,
+.bi-star-half,
+.bi-star-fill {
+  width: 12px;
+  height: 12px;
+}
+
 .pagination {
   display: flex;
   align-items: center;

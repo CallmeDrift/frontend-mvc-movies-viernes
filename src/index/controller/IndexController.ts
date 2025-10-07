@@ -16,7 +16,7 @@ export default class IndexController {
   private readonly menu: MenuController
   private readonly about: AboutController
   private readonly home: HomeController
-  private search: any 
+  private readonly search: any
 
   constructor(
     private readonly model: IndexModel,
@@ -30,34 +30,34 @@ export default class IndexController {
     this.menu = MenuFactory.create(menuContainer)
     this.about = AboutFactory.create(mainContainer)
     this.home = HomeFactory.create(mainContainer)
+
+    // Crear el controlador de búsqueda usando el contenedor existente del nav
+    const searchContainer = document.querySelector('.nav-btn-right') as HTMLElement
+    this.search = SearchFactory.create(searchContainer)
   }
 
   readonly initComponent = (): void => {
     this.model.initComponent()
     this.view.initComponent()
 
-
     this.menu.initComponent()
     this.movie.initComponent()
-
-
-    const menuEl = this.view.getMenuHTML()
-    const searchContainer = document.createElement('div')
-    searchContainer.classList.add('search-container')
-
-
-    if (menuEl.parentElement) {
-      menuEl.parentElement.insertBefore(searchContainer, menuEl.nextSibling)
-    } else {
-      document.body.insertBefore(searchContainer, this.view.getMainHTML())
-    }
-
-
-    const movieModel = (this.movie as any).model as import('../../movie/model/MovieModel.js').default
-    this.search = SearchFactory.create(searchContainer, movieModel)
     this.search.initComponent()
 
- 
+    // Conectar búsqueda con el modelo de películas
+    const searchModel = this.search.getModel()
+    const movieModel = (this.movie as any).model as import('../../movie/model/MovieModel.js').default
+
+    // Cuando cambia el texto en la búsqueda, filtra las películas
+    searchModel.attach({
+      update: () => {
+        const query = searchModel.getQuery()
+        console.log('🔍 Filtrando películas con:', query)
+        movieModel.filterMovies(query)
+      }
+    })
+
+    // Configurar acciones del menú
     const menuItems = this.menu['model'].getMenu()
 
     menuItems.forEach((item) => {
@@ -86,7 +86,6 @@ export default class IndexController {
       }
     })
 
-    // Render final del menú
     this.menu['view'].render()
   }
 }

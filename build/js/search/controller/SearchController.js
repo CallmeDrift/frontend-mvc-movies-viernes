@@ -6,9 +6,7 @@ export default class SearchController {
     constructor(container, movieModel) {
         this.model = new SearchModel();
         this.view = new SearchView(this.model, container);
-        // Si nos pasan el MovieModel, conectamos el filtrado directamente
         if (movieModel) {
-            // usamos attach con un objeto - casteamos a any para evitar problemas de tipos con Observer abstracto
             this.model.attach({
                 update: () => {
                     const q = this.model.getQuery();
@@ -18,7 +16,14 @@ export default class SearchController {
         }
     }
     initComponent = () => {
-        // ya está renderizado en el constructor; si quieres lógica extra, aquí
+        const form = document.querySelector('#search');
+        const input = form.querySelector('input');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const query = input.value.trim();
+            console.log('Buscando:', query);
+            this.model.setQuery(query);
+        });
     };
     getModel = () => this.model;
 }

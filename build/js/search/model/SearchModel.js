@@ -6,6 +6,9 @@ export default class SearchModel extends Subject {
         this.query = '';
     }
     getQuery = () => this.query;
+    search = (query) => {
+        console.log(`Buscando: ${query}`);
+    };
     setQuery = (newQuery) => {
         this.query = newQuery.toLowerCase();
         this.notifyAllObservers();

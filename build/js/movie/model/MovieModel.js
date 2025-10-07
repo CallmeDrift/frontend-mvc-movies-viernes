@@ -48,15 +48,21 @@ export default class MovieModel extends Subject {
         this.notifyAllObservers();
     };
     filterMovies = (query) => {
-        if (!query.trim()) {
+        if (!query) {
             this.filteredMovies = [];
         }
         else {
-            const q = query.toLowerCase();
-            this.filteredMovies = this.movies.filter((movie) => movie.title.toLowerCase().includes(q) ||
-                movie.year.toString().includes(q) ||
-                movie.genres.some((g) => g.toLowerCase().includes(q)) ||
-                movie.extract.toLowerCase().includes(q));
+            const normalizedQuery = query.toLowerCase();
+            this.filteredMovies = this.movies.filter((movie) => {
+                const title = movie.title?.toLowerCase() || '';
+                const year = movie.year?.toString().toLowerCase() || '';
+                const genre = movie.genres?.join(' ').toLowerCase() || '';
+                const synopsis = movie.extract?.toLowerCase() || '';
+                return (title.includes(normalizedQuery) ||
+                    year.includes(normalizedQuery) ||
+                    genre.includes(normalizedQuery) ||
+                    synopsis.includes(normalizedQuery));
+            });
         }
         this.currentPage = 1;
         this.notifyAllObservers();

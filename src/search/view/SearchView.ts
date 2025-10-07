@@ -1,35 +1,25 @@
-import Observer from '../../shared/Observer/Observer.js'
-import SearchModel from '../model/SearchModel.js'
+import SearchModel from "../model/SearchModel"
 
-
-export default class SearchView extends Observer<SearchModel> {
+export default class SearchView {
+  private readonly form: HTMLFormElement
   private readonly input: HTMLInputElement
-  private readonly container: HTMLElement
 
-  constructor(subject: SearchModel, container: HTMLElement) {
-    super(subject)
-    this.container = container
+  constructor(private readonly model: SearchModel, container: HTMLElement) {
+    // Buscar el formulario existente dentro del contenedor
+    this.form = container.querySelector('#search') as HTMLFormElement
+    this.input = this.form.querySelector('input') as HTMLInputElement
 
-    // Crear el input de búsqueda
-    this.input = document.createElement('input')
-    this.input.type = 'text'
-    this.input.placeholder = 'Buscar por título, año, género o sinopsis...'
-    this.input.classList.add('search-bar')
-
-    // Escuchar cambios
-    this.input.addEventListener('input', (event) => this.handleSearch(event))
-
-    this.container.appendChild(this.input)
+    this.initEvents()
   }
 
-readonly handleSearch = (event: Event): void => {
-  const target = event.target as HTMLInputElement
-  const searchModel = this.subject as SearchModel  
-  searchModel.setQuery(target.value)
-}
+  private initEvents = (): void => {
+    this.form.addEventListener('submit', (e) => {
+      e.preventDefault() // ❌ evita que recargue la página
 
-  readonly update = (): void => {
-    const searchModel = this.subject as SearchModel  
-    console.log('🔍 Query actualizada:', searchModel.getQuery())
+      const query = this.input.value.trim()
+      if (!query) return
+
+      this.model.search(query)
+    })
   }
 }

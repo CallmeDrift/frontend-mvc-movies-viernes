@@ -10,8 +10,14 @@ export default class SearchModel extends Subject<SearchModel> {
 
   readonly getQuery = (): string => this.query
 
+  readonly search = (query: string): void => {
+    console.log(`Buscando: ${query}`)
+  }
+
   readonly setQuery = (newQuery: string): void => {
     this.query = newQuery.toLowerCase()
     this.notifyAllObservers()
   }
+
+
 }
