@@ -1,7 +1,7 @@
 .movies {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 columnas */
-  grid-template-rows: repeat(2, 400px);   /* 2 filas */
+  grid-template-columns: repeat(5, 1fr); 
+  grid-template-rows: repeat(2, 400px);  
   gap: 20px;
   justify-items: center;
   align-items: start;

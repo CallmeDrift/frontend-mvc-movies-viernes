@@ -9,6 +9,14 @@
   text-align: center;
 }
 
+.about-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
 .about-container h2 {
   color: #333;
   margin-bottom: 10px;
