@@ -6,6 +6,7 @@ import AboutController from '../../about/controller/AboutController.js'
 import AboutFactory from '../../about/factory/AboutFactory.js'
 import HomeFactory from '../../home/factory/HomeFactory.js'
 import HomeController from '../../home/controller/HomeController.js'
+import NotFoundController from '../../404/controller/NotFoundController.js'
 
 import IndexModel from '../model/IndexModel.js'
 import IndexView from '../view/IndexView.js'
@@ -16,6 +17,7 @@ export default class IndexController {
   private readonly menu: MenuController
   private readonly about: AboutController
   private readonly home: HomeController
+  private readonly notFound: NotFoundController
   private readonly search: any
 
   constructor(
@@ -25,13 +27,14 @@ export default class IndexController {
     const mainContainer = this.view.getMainHTML()
     const menuContainer = this.view.getMenuHTML()
 
-    // Crear controladores principales
+
     this.movie = MovieFactory.create(mainContainer)
     this.menu = MenuFactory.create(menuContainer)
     this.about = AboutFactory.create(mainContainer)
     this.home = HomeFactory.create(mainContainer)
+    this.notFound = new NotFoundController(mainContainer)
 
-    // Crear el controlador de búsqueda usando el contenedor existente del nav
+
     const searchContainer = document.querySelector('.nav-btn-right') as HTMLElement
     this.search = SearchFactory.create(searchContainer)
   }
@@ -44,48 +47,80 @@ export default class IndexController {
     this.movie.initComponent()
     this.search.initComponent()
 
-    // Conectar búsqueda con el modelo de películas
+
     const searchModel = this.search.getModel()
     const movieModel = (this.movie as any).model as import('../../movie/model/MovieModel.js').default
 
-    // Cuando cambia el texto en la búsqueda, filtra las películas
     searchModel.attach({
       update: () => {
         const query = searchModel.getQuery()
-        console.log('🔍 Filtrando películas con:', query)
         movieModel.filterMovies(query)
       }
     })
 
-    // Configurar acciones del menú
+    const normalizeLink = (raw: string | undefined): string => {
+      if (!raw) return '#/home'
+
+      let s = raw.startsWith('#') ? raw.slice(1) : raw 
+      if (!s.startsWith('/')) s = '/' + s     
+      return '#' + s
+    }
+
+
     const menuItems = this.menu['model'].getMenu()
-
     menuItems.forEach((item) => {
-      if (item.label === 'Home' || item.label === 'Rentals') {
-        item.action = () => {
-          const main = this.view.getMainHTML()
-          main.innerHTML = ''
-          this.movie.initComponent()
-        }
-      }
-
-      if (item.label === 'About') {
-        item.action = () => {
-          const main = this.view.getMainHTML()
-          main.innerHTML = ''
-          this.about.initComponent()
-        }
-      }
-
-      if (item.label === 'Home') {
-        item.action = () => {
-          const main = this.view.getMainHTML()
-          main.innerHTML = ''
-          this.home.initComponent()
+      const route = normalizeLink(item.link)
+      item.action = (e?: Event) => {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault()
+        if (window.location.hash !== route) {
+          window.location.hash = route
+        } else {
+          this.handleRouting()
         }
       }
     })
 
     this.menu['view'].render()
+
+    window.addEventListener('hashchange', this.handleRouting)
+    this.handleRouting()
+  }
+
+  private readonly getNormalizedHash = (): string => {
+    const h = window.location.hash || '#/home'
+    if (!h.startsWith('#')) return '#/home'
+    let noHash = h.slice(1)
+    if (!noHash.startsWith('/')) noHash = '/' + noHash
+    return '#' + noHash
+  }
+
+  private readonly handleRouting = (): void => {
+    const main = this.view.getMainHTML()
+    main.innerHTML = ''
+
+    const hash = this.getNormalizedHash()
+
+    switch (hash) {
+      case '#/':
+      case '#/home':
+        this.renderComponent(this.home)
+        break
+      case '#/movies':
+      case '#/rentals':
+        this.renderComponent(this.movie)
+        break
+      case '#/about':
+        this.renderComponent(this.about)
+        break
+      default:
+        this.notFound.initComponent()
+        break
+    }
+  }
+
+  private readonly renderComponent = (controller: any): void => {
+    const main = this.view.getMainHTML()
+    main.innerHTML = ''
+    controller.initComponent()
   }
 }
