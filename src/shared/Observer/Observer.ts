@@ -1,12 +1,18 @@
 import Subject from './Subject.js'
 
-export default abstract class Observer<T> {
+export default class Observer<T> {
   protected subject: Subject<T>
+  private readonly onUpdate: (() => void) | null
 
-  abstract readonly update: () => void
-
-  constructor(subject: Subject<T>) {
+  constructor(subject: Subject<T>, onUpdate?: () => void) {
     this.subject = subject
+    this.onUpdate = onUpdate ?? null
     this.subject.attach(this)
+  }
+
+  readonly update = (): void => {
+    if (this.onUpdate) {
+      this.onUpdate()
+    }
   }
 }

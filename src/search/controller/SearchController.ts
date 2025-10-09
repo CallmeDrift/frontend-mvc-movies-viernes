@@ -1,6 +1,8 @@
 import SearchModel from '../model/SearchModel.js'
 import SearchView from '../view/SearchView.js'
 import MovieModel from '../../movie/model/MovieModel.js'
+import Observer from '../../shared/Observer/Observer.js'
+
 
 export default class SearchController {
   private readonly model: SearchModel
@@ -10,20 +12,18 @@ export default class SearchController {
     this.model = new SearchModel()
     this.view = new SearchView(this.model, container)
 
-
     if (movieModel) {
-      this.model.attach({
-        update: () => {
-          const q = this.model.getQuery()
-          movieModel.filterMovies(q)
-        },
-      } as any)
+      new Observer(this.model, () => {
+        const q = this.model.getQuery()
+        movieModel.filterMovies(q)
+      })
     }
   }
 
   readonly initComponent = (): void => {
     const form = document.querySelector('#search') as HTMLFormElement
     const input = form.querySelector('input') as HTMLInputElement
+    console.log(this.view)
 
     form.addEventListener('submit', (e) => {
       e.preventDefault()
@@ -32,5 +32,6 @@ export default class SearchController {
       this.model.setQuery(query)
     })
   }
+
   readonly getModel = (): SearchModel => this.model
 }

@@ -11,6 +11,17 @@ import NotFoundController from '../../404/controller/NotFoundController.js'
 import IndexModel from '../model/IndexModel.js'
 import IndexView from '../view/IndexView.js'
 import SearchFactory from '../../search/factory/SearchFactory.js'
+import SearchController from '../../search/controller/SearchController.js'
+import SearchModel from '../../search/model/SearchModel.js'
+import MovieModel from '../../movie/model/MovieModel.js'
+import MenuModel from '../../menu/model/MenuModel.js'
+import Observer from '../../shared/Observer/Observer.js'
+
+
+// Tipo genérico para cualquier controlador con initComponent()
+interface BaseController {
+  initComponent(): void
+}
 
 export default class IndexController {
   private readonly movie: MovieController
@@ -18,7 +29,7 @@ export default class IndexController {
   private readonly about: AboutController
   private readonly home: HomeController
   private readonly notFound: NotFoundController
-  private readonly search: any
+  private readonly search: SearchController
 
   constructor(
     private readonly model: IndexModel,
@@ -27,14 +38,14 @@ export default class IndexController {
     const mainContainer = this.view.getMainHTML()
     const menuContainer = this.view.getMenuHTML()
 
-
+    // controladores
     this.movie = MovieFactory.create(mainContainer)
     this.menu = MenuFactory.create(menuContainer)
     this.about = AboutFactory.create(mainContainer)
     this.home = HomeFactory.create(mainContainer)
     this.notFound = new NotFoundController(mainContainer)
 
-
+    // Controlador de búsqueda (no tocarlo pq con un comentario se estalla todo :3)
     const searchContainer = document.querySelector('.nav-btn-right') as HTMLElement
     this.search = SearchFactory.create(searchContainer)
   }
@@ -47,31 +58,29 @@ export default class IndexController {
     this.movie.initComponent()
     this.search.initComponent()
 
+    const searchModel: SearchModel = this.search.getModel()
+    const movieModel: MovieModel = this.movie['model']
 
-    const searchModel = this.search.getModel()
-    const movieModel = (this.movie as any).model as import('../../movie/model/MovieModel.js').default
-
-    searchModel.attach({
-      update: () => {
-        const query = searchModel.getQuery()
-        movieModel.filterMovies(query)
-      }
+    new Observer<SearchModel>(searchModel, (): void => {
+      const query = searchModel.getQuery()
+      movieModel.filterMovies(query)
     })
 
     const normalizeLink = (raw: string | undefined): string => {
       if (!raw) return '#/home'
-
-      let s = raw.startsWith('#') ? raw.slice(1) : raw 
-      if (!s.startsWith('/')) s = '/' + s     
+      let s = raw.startsWith('#') ? raw.slice(1) : raw
+      if (!s.startsWith('/')) s = '/' + s
       return '#' + s
     }
 
+    // acciones del menú
+    const menuModel: MenuModel = this.menu['model']
+    const menuItems = menuModel.getMenu()
 
-    const menuItems = this.menu['model'].getMenu()
     menuItems.forEach((item) => {
       const route = normalizeLink(item.link)
-      item.action = (e?: Event) => {
-        if (e && typeof e.preventDefault === 'function') e.preventDefault()
+      item.action = (e?: Event): void => {
+        e?.preventDefault()
         if (window.location.hash !== route) {
           window.location.hash = route
         } else {
@@ -118,7 +127,7 @@ export default class IndexController {
     }
   }
 
-  private readonly renderComponent = (controller: any): void => {
+  private readonly renderComponent = (controller: BaseController): void => {
     const main = this.view.getMainHTML()
     main.innerHTML = ''
     controller.initComponent()

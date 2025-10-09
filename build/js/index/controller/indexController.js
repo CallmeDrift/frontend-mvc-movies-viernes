@@ -4,6 +4,7 @@ import AboutFactory from '../../about/factory/AboutFactory.js';
 import HomeFactory from '../../home/factory/HomeFactory.js';
 import NotFoundController from '../../404/controller/NotFoundController.js';
 import SearchFactory from '../../search/factory/SearchFactory.js';
+import Observer from '../../shared/Observer/Observer.js';
 export default class IndexController {
     model;
     view;
@@ -18,11 +19,13 @@ export default class IndexController {
         this.view = view;
         const mainContainer = this.view.getMainHTML();
         const menuContainer = this.view.getMenuHTML();
+        // controladores
         this.movie = MovieFactory.create(mainContainer);
         this.menu = MenuFactory.create(menuContainer);
         this.about = AboutFactory.create(mainContainer);
         this.home = HomeFactory.create(mainContainer);
         this.notFound = new NotFoundController(mainContainer);
+        // Controlador de búsqueda (no tocarlo pq con un comentario se estalla todo :3)
         const searchContainer = document.querySelector('.nav-btn-right');
         this.search = SearchFactory.create(searchContainer);
     }
@@ -33,12 +36,10 @@ export default class IndexController {
         this.movie.initComponent();
         this.search.initComponent();
         const searchModel = this.search.getModel();
-        const movieModel = this.movie.model;
-        searchModel.attach({
-            update: () => {
-                const query = searchModel.getQuery();
-                movieModel.filterMovies(query);
-            }
+        const movieModel = this.movie['model'];
+        new Observer(searchModel, () => {
+            const query = searchModel.getQuery();
+            movieModel.filterMovies(query);
         });
         const normalizeLink = (raw) => {
             if (!raw)
@@ -48,12 +49,13 @@ export default class IndexController {
                 s = '/' + s;
             return '#' + s;
         };
-        const menuItems = this.menu['model'].getMenu();
+        // acciones del menú
+        const menuModel = this.menu['model'];
+        const menuItems = menuModel.getMenu();
         menuItems.forEach((item) => {
             const route = normalizeLink(item.link);
             item.action = (e) => {
-                if (e && typeof e.preventDefault === 'function')
-                    e.preventDefault();
+                e?.preventDefault();
                 if (window.location.hash !== route) {
                     window.location.hash = route;
                 }

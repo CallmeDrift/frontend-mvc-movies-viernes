@@ -1,11 +1,7 @@
 import Observer from './Observer.js'
 
-export default abstract class Subject<T> {
-  private readonly observers: Observer<T>[]
-
-  constructor() {
-    this.observers = []
-  }
+export default class Subject<T> {
+  private readonly observers: Observer<T>[] = []
 
   readonly attach = (observer: Observer<T>): void => {
     this.observers.push(observer)
@@ -13,7 +9,7 @@ export default abstract class Subject<T> {
 
   readonly detach = (observer: Observer<T>): void => {
     const index = this.observers.indexOf(observer)
-    this.observers.splice(index, 1)
+    if (index >= 0) this.observers.splice(index, 1)
   }
 
   readonly notifyAllObservers = (): void => {
