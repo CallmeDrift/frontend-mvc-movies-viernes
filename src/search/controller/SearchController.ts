@@ -21,7 +21,7 @@ export default class SearchController {
   }
 
   readonly initComponent = (): void => {
-    const form = document.querySelector('#search') as HTMLFormElement
+    const form = document.querySelector('#search') as HTMLElement
     const input = form.querySelector('input') as HTMLInputElement
     console.log(this.view)
 

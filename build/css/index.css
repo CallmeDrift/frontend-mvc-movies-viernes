@@ -53,6 +53,7 @@ nav menu {
   margin: 0px;
 }
 
+
 nav .nav-btn-left {
   text-align: left;
 }
@@ -106,6 +107,7 @@ nav span {
 nav a:hover {
   background-color: var(--main-color-light);
 }
+
 
 nav span:hover {
   background-color: var(--main-color-light);

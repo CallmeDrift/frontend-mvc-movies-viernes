@@ -1,12 +1,12 @@
 import SearchModel from "../model/SearchModel"
 
 export default class SearchView {
-  private readonly form: HTMLFormElement
+  private readonly form: HTMLElement
   private readonly input: HTMLInputElement
 
   constructor(private readonly model: SearchModel, container: HTMLElement) {
     // Buscar el formulario existente dentro del contenedor
-    this.form = container.querySelector('#search') as HTMLFormElement
+    this.form = container.querySelector('#search') as HTMLElement
     this.input = this.form.querySelector('input') as HTMLInputElement
 
     this.initEvents()

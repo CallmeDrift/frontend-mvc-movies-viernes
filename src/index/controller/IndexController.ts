@@ -16,6 +16,9 @@ import SearchModel from '../../search/model/SearchModel.js'
 import MovieModel from '../../movie/model/MovieModel.js'
 import MenuModel from '../../menu/model/MenuModel.js'
 import Observer from '../../shared/Observer/Observer.js'
+import LoginController from '../../login/controller/LoginController.js'
+import LoginFactory from '../../login/factory/LoginFactory.js'
+
 
 
 // Tipo genérico para cualquier controlador con initComponent()
@@ -28,6 +31,7 @@ export default class IndexController {
   private readonly menu: MenuController
   private readonly about: AboutController
   private readonly home: HomeController
+  private readonly login: LoginController
   private readonly notFound: NotFoundController
   private readonly search: SearchController
 
@@ -44,6 +48,8 @@ export default class IndexController {
     this.about = AboutFactory.create(mainContainer)
     this.home = HomeFactory.create(mainContainer)
     this.notFound = new NotFoundController(mainContainer)
+    this.login = LoginFactory.create(mainContainer)
+
 
     // Controlador de búsqueda (no tocarlo pq con un comentario se estalla todo :3)
     const searchContainer = document.querySelector('.nav-btn-right') as HTMLElement
@@ -53,10 +59,11 @@ export default class IndexController {
   readonly initComponent = (): void => {
     this.model.initComponent()
     this.view.initComponent()
-
     this.menu.initComponent()
     this.movie.initComponent()
     this.search.initComponent()
+    this.login.initComponent()
+
 
     const searchModel: SearchModel = this.search.getModel()
     const movieModel: MovieModel = this.movie['model']
@@ -120,6 +127,9 @@ export default class IndexController {
         break
       case '#/about':
         this.renderComponent(this.about)
+        break
+      case "#/login":
+        this.renderComponent(this.login)
         break
       default:
         this.notFound.initComponent()

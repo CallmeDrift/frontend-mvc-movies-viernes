@@ -29,6 +29,14 @@ export default class MenuModel {
           console.log('About clicked')
         },
       },
+/*      {
+        label: "Login",
+        link: "#login",
+        active: false,
+        action: () => {
+          console.log('Login clicked')
+        },
+      }*/
     ]
   }
 
