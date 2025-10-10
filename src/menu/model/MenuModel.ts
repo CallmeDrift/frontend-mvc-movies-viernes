@@ -26,6 +26,7 @@ export default class MenuModel {
         link: '#about',
         active: false,
         action: () => {
+          
           console.log('About clicked')
         },
       },
