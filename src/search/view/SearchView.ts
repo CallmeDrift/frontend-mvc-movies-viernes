@@ -14,7 +14,7 @@ export default class SearchView {
 
   private initEvents = (): void => {
     this.form.addEventListener('submit', (e) => {
-      e.preventDefault() // ❌ evita que recargue la página
+      e.preventDefault() // ya no se recarga la pagina 
 
       const query = this.input.value.trim()
       if (!query) return

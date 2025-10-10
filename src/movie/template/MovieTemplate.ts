@@ -13,7 +13,7 @@ export default class MovieTemplate {
     </div>
   `
 
-  /** ⭐ Devuelve las estrellas SVG según el score */
+  // estrellas según el score
   private getStarsHTML(score: number): string {
     const fullStars = Math.floor(score)
     const halfStar = score % 1 >= 0.5

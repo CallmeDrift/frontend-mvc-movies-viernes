@@ -11,7 +11,7 @@ export default class MovieTemplate {
       ${this.movies.map((movie) => this.getMovieHTML(movie)).join('')}
     </div>
   `;
-    /** ⭐ Devuelve las estrellas SVG según el score */
+    // estrellas según el score
     getStarsHTML(score) {
         const fullStars = Math.floor(score);
         const halfStar = score % 1 >= 0.5;

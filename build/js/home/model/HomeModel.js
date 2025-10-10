@@ -1,6 +1,6 @@
 export default class HomeModel {
     data = {
-        image: 'https://i.ibb.co/d4GKph6F/from-zero-deluxe-edition-up-for.png', // cambia la ruta según tu carpeta
+        image: 'https://i.ibb.co/tMsj5Fq4/Megumin-LP.jpg',
         song1: {
             title: 'The emptiness machine',
             lyrics: `
