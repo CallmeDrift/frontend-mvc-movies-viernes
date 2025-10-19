@@ -26,14 +26,22 @@ export default class MenuModel {
                     console.log('About clicked');
                 },
             },
-            /*      {
-                    label: "Login",
-                    link: "#login",
-                    active: false,
-                    action: () => {
-                      console.log('Login clicked')
-                    },
-                  }*/
+            {
+                label: "Login",
+                link: "#login",
+                active: false,
+                action: () => {
+                    console.log('Login clicked');
+                },
+            },
+            {
+                label: "CRUD",
+                link: "#crud",
+                active: false,
+                action: () => {
+                    console.log('CRUD clicked');
+                },
+            }
         ];
     }
     getMenu = () => this.menu;
