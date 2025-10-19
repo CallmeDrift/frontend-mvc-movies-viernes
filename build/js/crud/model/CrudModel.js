@@ -3,6 +3,10 @@ export default class CrudModel {
     constructor() {
         this.options = [
             {
+                label: "Crud",
+                link: "#crud"
+            },
+            {
                 label: "Create",
                 link: "#create"
             },

@@ -1,10 +1,14 @@
-import CrudElement from "../types/CrudElement";
+import CrudElement from "../types/CrudElement.js";
 
 export default class CrudModel {
     private readonly options: CrudElement[]
 
     constructor() {
         this.options = [
+            {
+                label: "Crud",
+                link: "#crud"
+            },
             {
                 label: "Create",
                 link: "#create"

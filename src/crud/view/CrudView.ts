@@ -1,5 +1,5 @@
-import CrudTemplate from "../template/CrudTemplate"
-import CrudElement from "../types/CrudElement"
+import CrudTemplate from "../template/CrudTemplate.js"
+import CrudElement from "../types/CrudElement.js"
 
 export default class CrudView {
     private readonly template: CrudTemplate

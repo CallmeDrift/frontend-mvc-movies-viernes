@@ -1,4 +1,4 @@
-import CrudElement from "../types/CrudElement"
+import CrudElement from "../types/CrudElement.js"
 
 export default class CrudTemplate {
 

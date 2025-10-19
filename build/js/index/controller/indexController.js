@@ -6,6 +6,7 @@ import NotFoundController from '../../404/controller/NotFoundController.js';
 import SearchFactory from '../../search/factory/SearchFactory.js';
 import Observer from '../../shared/Observer/Observer.js';
 import LoginFactory from '../../login/factory/LoginFactory.js';
+import CrudFactory from '../../crud/factory/CrudFactory.js';
 export default class IndexController {
     model;
     view;
@@ -16,6 +17,7 @@ export default class IndexController {
     login;
     notFound;
     search;
+    crud;
     constructor(model, view) {
         this.model = model;
         this.view = view;
@@ -28,6 +30,7 @@ export default class IndexController {
         this.home = HomeFactory.create(mainContainer);
         this.notFound = new NotFoundController(mainContainer);
         this.login = LoginFactory.create(mainContainer);
+        this.crud = CrudFactory.create(mainContainer);
         // Controlador de búsqueda
         const searchContainer = document.querySelector('.nav-btn-right');
         this.search = SearchFactory.create(searchContainer);
@@ -39,6 +42,7 @@ export default class IndexController {
         this.movie.initComponent();
         this.search.initComponent();
         this.login.initComponent();
+        this.crud.initComponent();
         const searchModel = this.search.getModel();
         const movieModel = this.movie['model'];
         new Observer(searchModel, () => {
@@ -113,6 +117,9 @@ export default class IndexController {
                 break;
             case '#/login':
                 this.renderComponent(this.login);
+                break;
+            case '#/crud':
+                this.renderComponent(this.crud);
                 break;
             default:
                 this.notFound.initComponent();

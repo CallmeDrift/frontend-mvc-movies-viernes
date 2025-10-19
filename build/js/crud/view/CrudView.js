@@ -1,4 +1,4 @@
-import CrudTemplate from "../template/CrudTemplate";
+import CrudTemplate from "../template/CrudTemplate.js";
 export default class CrudView {
     parent;
     template;

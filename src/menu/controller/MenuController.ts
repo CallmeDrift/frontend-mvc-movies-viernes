@@ -5,7 +5,7 @@ export default class MenuController {
   constructor(
     private readonly model: MenuModel,
     private readonly view: MenuView
-  ) {}
+  ) { }
 
   readonly initComponent = () => {
     this.model.initComponent()
