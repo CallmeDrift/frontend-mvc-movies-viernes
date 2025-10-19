@@ -19,8 +19,6 @@ import Observer from '../../shared/Observer/Observer.js'
 import LoginController from '../../login/controller/LoginController.js'
 import LoginFactory from '../../login/factory/LoginFactory.js'
 
-
-
 // Tipo genérico para cualquier controlador con initComponent()
 interface BaseController {
   initComponent(): void
@@ -50,8 +48,7 @@ export default class IndexController {
     this.notFound = new NotFoundController(mainContainer)
     this.login = LoginFactory.create(mainContainer)
 
-
-    // Controlador de búsqueda (no tocarlo pq con un comentario se estalla todo :3)
+    // Controlador de búsqueda
     const searchContainer = document.querySelector('.nav-btn-right') as HTMLElement
     this.search = SearchFactory.create(searchContainer)
   }
@@ -63,7 +60,6 @@ export default class IndexController {
     this.movie.initComponent()
     this.search.initComponent()
     this.login.initComponent()
-
 
     const searchModel: SearchModel = this.search.getModel()
     const movieModel: MovieModel = this.movie['model']
@@ -93,6 +89,8 @@ export default class IndexController {
         } else {
           this.handleRouting()
         }
+        // Actualiza el estado activo al hacer clic
+        this.updateActiveMenu(route)
       }
     })
 
@@ -110,11 +108,27 @@ export default class IndexController {
     return '#' + noHash
   }
 
+  private readonly updateActiveMenu = (currentHash: string): void => {
+    const menuModel: MenuModel = this.menu['model']
+    const menuItems = menuModel.getMenu()
+
+    menuItems.forEach(item => {
+      // Activa solo el ítem correspondiente
+      item.active = item.link === currentHash.replace('#/', '#')
+    })
+
+    // Vuelve a renderizar el menú para aplicar la clase activa
+    this.menu['view'].render()
+  }
+
   private readonly handleRouting = (): void => {
     const main = this.view.getMainHTML()
     main.innerHTML = ''
 
     const hash = this.getNormalizedHash()
+
+    // Actualiza el estado activo según la ruta actual
+    this.updateActiveMenu(hash)
 
     switch (hash) {
       case '#/':
@@ -128,7 +142,7 @@ export default class IndexController {
       case '#/about':
         this.renderComponent(this.about)
         break
-      case "#/login":
+      case '#/login':
         this.renderComponent(this.login)
         break
       default:

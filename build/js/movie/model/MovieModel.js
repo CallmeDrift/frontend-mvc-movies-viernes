@@ -54,10 +54,10 @@ export default class MovieModel extends Subject {
         else {
             const normalizedQuery = query.toLowerCase();
             this.filteredMovies = this.movies.filter((movie) => {
-                const title = movie.title?.toLowerCase() || '';
-                const year = movie.year?.toString().toLowerCase() || '';
-                const genre = movie.genres?.join(' ').toLowerCase() || '';
-                const synopsis = movie.extract?.toLowerCase() || '';
+                const title = movie.title?.toLowerCase().trim() || '';
+                const year = movie.year?.toString().toLowerCase().trim() || '';
+                const genre = movie.genres?.join(' ').toLowerCase().trim() || '';
+                const synopsis = movie.extract?.toLowerCase().trim() || '';
                 return (title.includes(normalizedQuery) ||
                     year.includes(normalizedQuery) ||
                     genre.includes(normalizedQuery) ||

@@ -28,7 +28,7 @@ export default class IndexController {
         this.home = HomeFactory.create(mainContainer);
         this.notFound = new NotFoundController(mainContainer);
         this.login = LoginFactory.create(mainContainer);
-        // Controlador de búsqueda (no tocarlo pq con un comentario se estalla todo :3)
+        // Controlador de búsqueda
         const searchContainer = document.querySelector('.nav-btn-right');
         this.search = SearchFactory.create(searchContainer);
     }
@@ -66,6 +66,8 @@ export default class IndexController {
                 else {
                     this.handleRouting();
                 }
+                // Actualiza el estado activo al hacer clic
+                this.updateActiveMenu(route);
             };
         });
         this.menu['view'].render();
@@ -81,10 +83,22 @@ export default class IndexController {
             noHash = '/' + noHash;
         return '#' + noHash;
     };
+    updateActiveMenu = (currentHash) => {
+        const menuModel = this.menu['model'];
+        const menuItems = menuModel.getMenu();
+        menuItems.forEach(item => {
+            // Activa solo el ítem correspondiente
+            item.active = item.link === currentHash.replace('#/', '#');
+        });
+        // Vuelve a renderizar el menú para aplicar la clase activa
+        this.menu['view'].render();
+    };
     handleRouting = () => {
         const main = this.view.getMainHTML();
         main.innerHTML = '';
         const hash = this.getNormalizedHash();
+        // Actualiza el estado activo según la ruta actual
+        this.updateActiveMenu(hash);
         switch (hash) {
             case '#/':
             case '#/home':
@@ -97,7 +111,7 @@ export default class IndexController {
             case '#/about':
                 this.renderComponent(this.about);
                 break;
-            case "#/login":
+            case '#/login':
                 this.renderComponent(this.login);
                 break;
             default:
