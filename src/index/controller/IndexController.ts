@@ -18,8 +18,10 @@ import MenuModel from '../../menu/model/MenuModel.js'
 import Observer from '../../shared/Observer/Observer.js'
 import LoginController from '../../login/controller/LoginController.js'
 import LoginFactory from '../../login/factory/LoginFactory.js'
-import CrudController from '../../crud/controller/CrudController.js'
-import CrudFactory from '../../crud/factory/CrudFactory.js'
+import CrudController from '../../crud/crud/controller/CrudController.js'
+import CrudFactory from '../../crud/crud/factory/CrudFactory.js'
+import CreateController from '../../crud/create/controller/CreateController.js'
+import CreateFactory from '../../crud/create/factoy/CreateFactory.js'
 
 // Tipo genérico para cualquier controlador con initComponent()
 interface BaseController {
@@ -35,6 +37,7 @@ export default class IndexController {
   private readonly notFound: NotFoundController
   private readonly search: SearchController
   private readonly crud: CrudController
+  private readonly create: CreateController
 
   constructor(
     private readonly model: IndexModel,
@@ -51,6 +54,7 @@ export default class IndexController {
     this.notFound = new NotFoundController(mainContainer)
     this.login = LoginFactory.create(mainContainer)
     this.crud = CrudFactory.create(mainContainer)
+    this.create = CreateFactory.create(mainContainer)
 
     // Controlador de búsqueda
     const searchContainer = document.querySelector('.nav-btn-right') as HTMLElement
@@ -65,6 +69,7 @@ export default class IndexController {
     this.search.initComponent()
     this.login.initComponent()
     this.crud.initComponent()
+    this.create.initComponent()
 
     const searchModel: SearchModel = this.search.getModel()
     const movieModel: MovieModel = this.movie['model']

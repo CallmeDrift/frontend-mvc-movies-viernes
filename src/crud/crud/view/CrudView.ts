@@ -12,7 +12,9 @@ export default class CrudView {
         this.template.setOptions(menu)
         this.parent.appendChild(this.template.getHTML())
       }
-    
+      
+      readonly getMainHTML = (): HTMLElement => this.parent
+      
     readonly render = () => {
         this.parent.innerHTML = ''
         this.parent.appendChild(this.template.getHTML())
